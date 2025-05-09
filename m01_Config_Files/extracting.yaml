@@ -1,0 +1,20 @@
+# Config file for IFC extraction
+
+data_expand: False
+copies: 1
+
+rotation:
+  min: 0      # 最小旋转角度
+  max: 360    # 最大旋转角度
+translation:
+  x_range: [-15, 15]  # x轴平移范围
+  y_range: [-15, 15]  # y轴平移范围
+axis: "z"     # 默认旋转轴
+
+# Config file for SDF extraction
+dense_of_samples_on_surface: 600   # per m2
+dense_of_samples_in_space: 1000    # per m3
+far_field_coefficient: 0.2         # of dense_of_samples_in_space
+
+surface_offset_1: 0.02              # distance on normal direction, both direction.
+surface_offset_2: 0.5              # second layer, outside.

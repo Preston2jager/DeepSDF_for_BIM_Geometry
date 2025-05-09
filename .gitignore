@@ -1,0 +1,4 @@
+m02_Data_Files/**
+
+!m02_Data_Files/**/
+!m02_Data_Files/**/__init__.py

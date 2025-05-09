@@ -1,2 +1,1 @@
-# DeepSDF_for_BIM_Geometry
-DeepSDF_for_BIM_Geometry
+# IFC_SDF

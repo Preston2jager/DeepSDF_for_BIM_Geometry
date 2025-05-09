@@ -1,0 +1,5 @@
+ifc_classes:  
+  - IfcWindow
+  - IfcDoor
+  - IfcSlab
+  - IfcWall
