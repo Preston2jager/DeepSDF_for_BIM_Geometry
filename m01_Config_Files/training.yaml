@@ -29,12 +29,3 @@ pretrain_weights: ''   # Path to pretrain weights
 pretrain_optim_model: ''   # Path to pretrain weights (model)
 pretrain_optim_latent: ''   # Path to pretrain weights (latent codes)
 
-# Config file for training GCN model
-
-GCN_tag_dim: 4 # Must be the same as number of ifc_classes
-GCN_feature_channels: 512
-GCN_hidden_channels: 1024
-
-GCN_epochs: 1000
-GCN_lr_model: 0.00001
-GCN_batch_size: 1
