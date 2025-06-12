@@ -45,7 +45,10 @@ class SDF_Runner():
         os.makedirs(self.run_dir, exist_ok=True)
         Source_idx_int2str_path = os.path.join(os.path.dirname(m02_Data_Files.d04_SDF_Converted.__file__), 'idx_int2str_dict.npy')
         Target_idx_int2str_path = os.path.join(self.run_dir, 'idx_int2str_dict.npy')
+        Source_idx_str2int_path = os.path.join(os.path.dirname(m02_Data_Files.d04_SDF_Converted.__file__), 'idx_str2int_dict.npy')
+        Target_idx_str2int_path = os.path.join(self.run_dir, 'idx_str2int_dict.npy')
         self.copy_training_idx_files(Source_idx_int2str_path, Target_idx_int2str_path)
+        self.copy_training_idx_files(Source_idx_str2int_path, Target_idx_str2int_path)
         # directory to save new latent codes
         if args.mode == "pred":
             self.latent_dir = os.path.join(self.run_dir, 'latent')
