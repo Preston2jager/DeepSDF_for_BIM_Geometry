@@ -55,59 +55,46 @@ def Regenerate_global_ids(filename, IFC_dir):
     IFC_file.write(IFC_file_path) 
     print(f"New uid for {IFC_file_path} generated")
 
-def Export_windows_and_doors(element, index, settings):
+def Export_windows_and_doors(elem, idx, settings):
     """
-    Replace windows and doors to a box and export as .obj.
+    Replace window/door geometry with an oriented bounding box.
     """
-    Split=False
-    Segments = None
-    Vertices = []
-    Triangles = []
-    IFC_class = element.is_a()
-    Vertex_offset = 0  
+    settings.set(settings.USE_WORLD_COORDS, False)
+    vertices, triangles = [], []
+    v_ofs = 0
+    IFC_class = elem.is_a()
     try:
-        shape = ifcopenshell.geom.create_shape(settings, element)
-        verts = np.array(shape.geometry.verts).reshape(-1, 3)
-        placement_matrix = np.array(shape.transformation.matrix).reshape(4, 4).T
-        verts_homogeneous = np.hstack([verts, np.ones((verts.shape[0], 1))])
-        local_verts = (np.linalg.inv(placement_matrix) @ verts_homogeneous.T).T[:, :3]
-        min_local = local_verts.min(axis=0)
-        max_local = local_verts.max(axis=0)
-        bbox_local_vertices = np.array([
-            [min_local[0], min_local[1], min_local[2]],
-            [max_local[0], min_local[1], min_local[2]],
-            [max_local[0], max_local[1], min_local[2]],
-            [min_local[0], max_local[1], min_local[2]],
-            [min_local[0], min_local[1], max_local[2]],
-            [max_local[0], min_local[1], max_local[2]],
-            [max_local[0], max_local[1], max_local[2]],
-            [min_local[0], max_local[1], max_local[2]],
+        shp  = ifcopenshell.geom.create_shape(settings, elem)
+        verts_l = np.asarray(shp.geometry.verts, dtype=float).reshape(-1, 3)
+        T_wl = np.asarray(shp.transformation.matrix, dtype=float).reshape(4, 4).T
+        lo, hi = verts_l.min(0), verts_l.max(0)
+        bbox_l = np.array([
+            [lo[0], lo[1], lo[2]], [hi[0], lo[1], lo[2]],
+            [hi[0], hi[1], lo[2]], [lo[0], hi[1], lo[2]],
+            [lo[0], lo[1], hi[2]], [hi[0], lo[1], hi[2]],
+            [hi[0], hi[1], hi[2]], [lo[0], hi[1], hi[2]],
         ])
-        bbox_local_vertices_h = np.hstack([bbox_local_vertices, np.ones((8, 1))])
-        bbox_world_vertices = (placement_matrix @ bbox_local_vertices_h.T).T[:, :3]
-        Vertices.extend(bbox_world_vertices)
-        quad_faces = [
-            [0, 1, 2, 3],  
-            [4, 5, 6, 7],  
-            [0, 1, 5, 4],  
-            [1, 2, 6, 5],  
-            [2, 3, 7, 6],  
-            [3, 0, 4, 7],  
+        bbox_w = (T_wl @ np.c_[bbox_l, np.ones(8)].T).T[:, :3]
+        vertices.extend(bbox_w)
+        quads = [
+            [0,1,2,3], [4,5,6,7], [0,1,5,4],
+            [1,2,6,5], [2,3,7,6], [3,0,4,7],
         ]
-        # Split faces to triangles.
-        for quad in quad_faces:
-            idx0, idx1, idx2, idx3 = [Vertex_offset + i for i in quad]
-            Triangles.append([idx0, idx1, idx2])
-            Triangles.append([idx0, idx2, idx3])
-        Vertex_offset += 8
+        for q in quads:
+            a, b, c, d = (v_ofs + np.array(q)).tolist()
+            triangles += [[a, b, c], [a, c, d]]
+        v_ofs += 8
+
     except Exception as e:
-        print(f"Error with {element.GlobalId} info: {e}")
-    return Vertices, Triangles, element.GlobalId, IFC_class, index, Split, Segments
+        print(f"[{elem.GlobalId}] 处理失败: {e}")
+
+    return vertices, triangles, elem.GlobalId, IFC_class, idx, False, None
 
 def Export_general_elements(element, index, settings):
     """
     Export verts and faces for general elements, if an elements has separate parts, export separately.
     """
+    settings.set(settings.USE_WORLD_COORDS, True)
     Split = False
     IFC_class = element.is_a()
     Vertices, Triangles = Get_geometry(element, settings)
@@ -136,6 +123,7 @@ def IFC_to_obj(Objs_dir, IFC_file, IFC_classes, index, settings):
             Window_and_door_elements += elements
         else:
             General_elements += elements
+            print(General_elements)
 
     # Process windows and doors
     for element in Window_and_door_elements:

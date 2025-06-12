@@ -22,3 +22,5 @@ m04_DeepSDF/dataset_sdf.py
 m04_DeepSDF/model_sdf.py
 m04_DeepSDF/sdf_runner.py
 m04_DeepSDF/utils_deepsdf.py
+m06_Paper/__init__.py
+m06_Paper/d02_Object_Files/__init__.py

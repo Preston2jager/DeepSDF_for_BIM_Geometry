@@ -1,22 +1,9 @@
 import os
+import sys
 
-import open3d.visualization.gui as gui
-import open3d.visualization.rendering as rendering
-
-import m02_Data_Files.d05_SDF_Results.runs_sdf
-import m02_Data_Files.d02_Object_Files
-
-#===========================
-run_index = "11_06_171540"
-#===========================
-
-run_folder = run_index + "/meshes_training/"
-# 获取当前目录下所有的 .obj 文件
-obj_dir_base = os.path.join(os.path.dirname(m02_Data_Files.d05_SDF_Results.runs_sdf.__file__),run_folder)
-Obj_dir_target = os.path.dirname(m02_Data_Files.d02_Object_Files.__file__)
-
-obj_files_base = [f for f in os.listdir(obj_dir_base) if f.endswith(".obj")]
-obj_files_target = [f for f in os.listdir(Obj_dir_target) if f.endswith(".obj")]
+import open3d as o3d
+import tkinter as tk
+from tkinter import filedialog, messagebox
 
 def append_meshes(obj_files, obj_path):
     meshes = []
@@ -30,9 +17,25 @@ def append_meshes(obj_files, obj_path):
         meshes.append(mesh)
     return meshes
 
+def main(folder):
+    obj_files = [f for f in os.listdir(folder) if f.endswith(".obj")]
+    meshes = append_meshes(obj_files,folder)
+    if meshes:
+        o3d.visualization.draw_geometries(meshes)
+    else:
+        print("没有可用的 .obj 文件进行渲染")
 
-# 渲染所有模型，保持原始坐标
-if meshes:
-    o3d.visualization.draw_geometries(meshes)
-else:
-    print("没有可用的 .obj 文件进行渲染")
+if __name__ == "__main__":
+    try:
+        root = tk.Tk()
+        root.withdraw()
+        # Ask user to select folder
+        folder = filedialog.askdirectory(title="Select the folder")
+        if not folder:
+            messagebox.showerror("No Folder Selected", "Please select a valid folder. Exiting.")
+            sys.exit(1)
+        main(folder)
+    except Exception as e:
+        import traceback
+        tb = traceback.format_exc()
+        messagebox.showerror("Unhandled Exception", tb)
