@@ -13,14 +13,14 @@ from datetime import datetime
 import numpy as np
 from tqdm import tqdm
 
-from utils.utils_deepsdf import SDFLoss_multishape_full_exp
-from utils import utils_deepsdf
+from m04_DeepSDF.utils_deepsdf import SDFLoss_multishape_full_exp
+from m04_DeepSDF import utils_deepsdf
 
 import model_sdf as sdf_model
 import dataset_sdf as dataset
 import m02_Data_Files.d04_SDF_Converted
 import m02_Data_Files.d05_SDF_Results.runs_sdf as runs
-import m02_Data_Files.d08_Predict_Data.d04_SDF
+
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 

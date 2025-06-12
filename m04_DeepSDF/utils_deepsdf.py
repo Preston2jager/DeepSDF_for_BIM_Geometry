@@ -18,17 +18,13 @@ def clamp(x, delta=torch.tensor([[0.1]]).to(device)):
     return minimum
 
 def SDFLoss_multishape_full_exp(sdf, prediction, x_latent, sigma, alpha=0.5, w_max=1.2, w_min=0.05):
-
     dtype = sdf.dtype
     device = sdf.device
-
     weight = w_min + (w_max - w_min) * torch.exp(-alpha * torch.abs(sdf))
-
     l1 = torch.mean(weight * torch.abs(prediction - sdf))
     l2 = sigma**2 * torch.mean(torch.linalg.norm(x_latent, dim=1, ord=2))
 
     return l1 + l2, l1, l2
-
 
 def generate_latent_codes(latent_size, samples_dict):
     """Generate a random latent codes for each shape form a Gaussian distribution
@@ -48,12 +44,11 @@ def generate_latent_codes(latent_size, samples_dict):
     latent_codes.requires_grad_(True)
     return latent_codes #, dict_latent_codes
 
-
 def get_volume_coords(resolution = 128):
     """Get 3-dimensional vector (M, N, P) according to the desired resolutions."""
-    x_min, x_max = -15, 15  # 梁的长度
-    y_min, y_max = -15, 15   # 梁的高度
-    z_min, z_max = -15, 15        # 梁的宽度
+    x_min, x_max = -30, 30  # 梁的长度
+    y_min, y_max = -30, 30   # 梁的高度
+    z_min, z_max = -30, 30        # 梁的宽度
     x_values = torch.linspace(x_min, x_max, resolution, device=device)
     y_values = torch.linspace(y_min, y_max, resolution, device=device)
     z_values = torch.linspace(z_min, z_max, resolution, device=device)
@@ -65,10 +60,8 @@ def get_volume_coords(resolution = 128):
 
     return coords, grid_size_axis
 
-
 def save_meshplot(vertices, faces, path):
     mp.plot(vertices, faces, c=vertices[:, 2], filename=path)
-
 
 def predict_sdf(latent, coords_batches, model):
 
@@ -83,7 +76,6 @@ def predict_sdf(latent, coords_batches, model):
             sdf = torch.vstack((sdf, sdf_batch))        
 
     return sdf
-
 
 def extract_mesh(grad_size_axis, sdf):
     grid_sdf = sdf.view(grad_size_axis, grad_size_axis, grad_size_axis).detach().cpu().numpy()

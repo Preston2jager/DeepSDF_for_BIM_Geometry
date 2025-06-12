@@ -2,7 +2,7 @@ import torch.nn as nn
 import torch
 import copy
 from tqdm import tqdm
-from utils import utils_deepsdf
+from m04_DeepSDF import utils_deepsdf
 
 """
 Model based on the paper 'DeepSDF'. 
@@ -100,7 +100,7 @@ class SDFModel(torch.nn.Module):
             if cfg['clamp']:
                 predictions = torch.clamp(predictions, -cfg['clamp_value'], cfg['clamp_value'])
 
-            loss_value, l1, l2 = utils_deepsdf.SDFLoss_multishape(sdf_gt, predictions, x[:, :self.latent_size], sigma=cfg['sigma_regulariser'])
+            loss_value, l1, l2 = utils_deepsdf.SDFLoss_multishape_full_exp(sdf_gt, predictions, x[:, :self.latent_size], sigma=cfg['sigma_regulariser'])
             loss_value.backward()
 
             if writer is not None:

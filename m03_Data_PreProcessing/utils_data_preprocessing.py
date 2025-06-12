@@ -2,7 +2,6 @@ import ifcopenshell
 import ifcopenshell.geom
 import os
 import re
-import json
 import shutil
 import math
 import tempfile
@@ -11,11 +10,6 @@ import yaml
 
 import numpy as np
 from collections import deque, defaultdict
-
-import m02_Data_Files.d01_Raw_IFC
-import m02_Data_Files.d01_Raw_IFC.d01_Expanded
-import m02_Data_Files.d02_Object_Files
-
 
 def npy_read_out(file):
     data = np.load(file, allow_pickle=True)  
