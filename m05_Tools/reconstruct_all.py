@@ -70,7 +70,7 @@ def main(cfg):
     coords_batches = torch.split(coords, 100000)
     
     # Load paths
-    str2int_path = os.path.join(os.path.dirname(m02_Data_Files.d04_SDF_Converted.__file__), 'idx_str2int_dict.npy')
+    str2int_path = os.path.join(os.path.dirname(runs_sdf.__file__), cfg['folder_sdf'], 'idx_str2int_dict.npy')
     results_dict_path = os.path.join(os.path.dirname(runs_sdf.__file__), cfg['folder_sdf'], 'results.npy')
     
     # Load dictionaries
