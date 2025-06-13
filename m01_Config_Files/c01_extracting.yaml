@@ -12,8 +12,8 @@ translation:
 axis: "z"     
 
 # Defines the number of points to sample from each object.
-dense_of_samples_on_surface: 600   # per m2
-dense_of_samples_in_space: 1000    # per m3
+dense_of_samples_on_surface: 800   # per m2
+dense_of_samples_in_space: 800    # per m3
 far_field_coefficient: 0.2         # of dense_of_samples_in_space
 
 surface_offset_1: 0.02              # distance on normal direction, both direction.

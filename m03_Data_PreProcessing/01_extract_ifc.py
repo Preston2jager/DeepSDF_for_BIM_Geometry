@@ -12,7 +12,6 @@ import m02_Data_Files.d01_Raw_IFC.d01_Expanded
 import m02_Data_Files.d02_Object_Files
 import m02_Data_Files.d04_SDF_Converted
 
-
 def main(cfg,ifc_cfg,args):
     # Extracting objects from IFC files
     # Define paths
@@ -57,11 +56,9 @@ def main(cfg,ifc_cfg,args):
     Batch_obj_transform(Object_folder_path,cfg)
         
 if __name__=='__main__':
-
     parser = argparse.ArgumentParser()
     parser.add_argument("mode", help="Mode of operation, train or pred", nargs='?', default="train")
     args = parser.parse_args()
-
     if args.mode == "train":
         print("Extract for training data")
         cfg_path = os.path.dirname(m01_Config_Files.__file__)
@@ -75,7 +72,6 @@ if __name__=='__main__':
     else:
         print("Incorrect mode, train or pred?")
         sys.exit(1)
-
     with open(cfg_file, 'rb') as f:
         cfg_yaml = yaml.load(f, Loader=yaml.FullLoader)
     with open(ifc_cfg_file, 'rb') as f:

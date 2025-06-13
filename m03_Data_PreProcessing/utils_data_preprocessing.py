@@ -84,10 +84,8 @@ def Export_windows_and_doors(elem, idx, settings):
             a, b, c, d = (v_ofs + np.array(q)).tolist()
             triangles += [[a, b, c], [a, c, d]]
         v_ofs += 8
-
     except Exception as e:
         print(f"[{elem.GlobalId}] 处理失败: {e}")
-
     return vertices, triangles, elem.GlobalId, IFC_class, idx, False, None
 
 def Export_general_elements(element, index, settings):
@@ -115,7 +113,6 @@ def IFC_to_obj(Objs_dir, IFC_file, IFC_classes, index, settings):
     Special_classes = {"IfcWindow", "IfcDoor"}
     Window_and_door_elements = []
     General_elements = []
-
     # Extracting elements
     for class_name in IFC_classes:
         elements = IFC_file.by_type(class_name)
@@ -124,7 +121,6 @@ def IFC_to_obj(Objs_dir, IFC_file, IFC_classes, index, settings):
         else:
             General_elements += elements
             print(General_elements)
-
     # Process windows and doors
     for element in Window_and_door_elements:
         Vertices, Triangles, element.GlobalId, IFC_class, index, Split, Segments = Export_windows_and_doors(element, index, settings)
