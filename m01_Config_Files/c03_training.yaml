@@ -1,6 +1,6 @@
 # Config file for training SDF model
 
-seed: 36   # Seed for reproducibility
+seed: 12   # Seed for reproducibility
 
 # training
 epochs: 3000

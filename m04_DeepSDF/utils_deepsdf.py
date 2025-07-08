@@ -44,11 +44,11 @@ def generate_latent_codes(latent_size, samples_dict):
     latent_codes.requires_grad_(True)
     return latent_codes #, dict_latent_codes
 
-def get_volume_coords(resolution = 128):
+def get_volume_coords(resolution = 256):
     """Get 3-dimensional vector (M, N, P) according to the desired resolutions."""
-    x_min, x_max = -10, 10  # 梁的长度
-    y_min, y_max = 10, 35   # 梁的高度
-    z_min, z_max = -0, 10        # 梁的宽度
+    x_min, x_max = -5, 5  # 梁的长度
+    y_min, y_max = -5, 5   # 梁的高度
+    z_min, z_max = -5, 5        # 梁的宽度
     x_values = torch.linspace(x_min, x_max, resolution, device=device)
     y_values = torch.linspace(y_min, y_max, resolution, device=device)
     z_values = torch.linspace(z_min, z_max, resolution, device=device)

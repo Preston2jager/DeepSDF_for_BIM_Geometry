@@ -6,7 +6,6 @@ import numpy as np
 from tqdm import tqdm
 
 import m01_Config_Files
-import m02_Data_Files.d04_SDF_Converted
 import m04_DeepSDF.model_sdf as sdf_model
 from m04_DeepSDF import utils_deepsdf
 from m02_Data_Files.d05_SDF_Results import runs_sdf
@@ -16,13 +15,11 @@ Store the mesh in the same folder where the latent code is located."""
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
 def read_params(cfg):
     """Read the settings from the settings.yaml file. These are the settings used during training."""
     training_settings_path = os.path.join(os.path.dirname(runs_sdf.__file__),  cfg['folder_sdf'], 'settings.yaml') 
     with open(training_settings_path, 'rb') as f:
         training_settings = yaml.load(f, Loader=yaml.FullLoader)
-
     return training_settings
 
 
@@ -51,10 +48,8 @@ def reconstruct_object(cfg, latent_code, obj_idx, obj_id_str, model, coords_batc
 
 def main(cfg):
     training_settings = read_params(cfg)
-
     # Load the model
     weights = os.path.join(os.path.dirname(runs_sdf.__file__), cfg['folder_sdf'], 'weights.pt')
-
     model = sdf_model.SDFModel(
         num_layers=training_settings['num_layers'], 
         skip_connections=training_settings['latent_size'], 
