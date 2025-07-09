@@ -57,9 +57,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class OctreeNode:
     """Simple container for one octree node."""
-
     __slots__ = ("center", "half", "depth", "sdf_corners")
-
+    # Python internal feature
     def __init__(self, center: np.ndarray, half: float, depth: int, sdf_corners: np.ndarray):
         self.center = center  # (3,) world‑space centre
         self.half = half  # half‑edge length
@@ -83,7 +82,8 @@ _CORNER_OFFSETS = torch.tensor(
     device=device,
 )
 
-
+#这个函数是八叉树建图和 marching cubes 重建过程中最核心的“点采样接口”。
+#每当你想知道某个点的 SDF 值（是否靠近表面）时，就通过这个函数调用网络预测。
 def _eval_sdf(latent: torch.Tensor, coords: torch.Tensor, model: torch.nn.Module) -> torch.Tensor:
     """Vectorised single‑batch SDF evaluation (no grad, returns (N,))."""
     with torch.no_grad():
@@ -277,7 +277,6 @@ def _read_training_settings(cfg):
 
 def main(cfg):
     training_settings = _read_training_settings(cfg)
-
     weights_path = os.path.join(os.path.dirname(runs_sdf.__file__), cfg["folder_sdf"], "weights.pt")
     model = sdf_model.SDFModel(
         num_layers=training_settings["num_layers"],
@@ -287,18 +286,15 @@ def main(cfg):
     ).to(device)
     model.load_state_dict(torch.load(weights_path, map_location=device))
     model.eval()
-
     str2int_path = os.path.join(os.path.dirname(runs_sdf.__file__), cfg["folder_sdf"], "idx_str2int_dict.npy")
     results_path = os.path.join(os.path.dirname(runs_sdf.__file__), cfg["folder_sdf"], "results.npy")
-
     str2int = np.load(str2int_path, allow_pickle=True).item()
     results_dict = np.load(results_path, allow_pickle=True).item()
-
     for obj_id_path, obj_idx in tqdm(str2int.items(), desc="Adaptive reconstruction"):
         latent_np = results_dict["best_latent_codes"][obj_idx]
         latent_code = torch.tensor(latent_np, device=device)
         reconstruct_object(cfg, latent_code, obj_idx, obj_id_path, model)
-
+        
 if __name__ == "__main__":
     cfg_path = os.path.join(os.path.dirname(m01_Config_Files.__file__), "c04_reconstruct.yaml")
     with open(cfg_path, "rb") as f:
