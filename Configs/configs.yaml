@@ -1,0 +1,69 @@
+
+# ===== Path =====
+Pathes: 
+  Raw_IFC_folder_path: "Raw_IFC"
+  Expanded_IFC_folder_path: "Expanded_IFC"
+  Objects_folder_path: "Objects"
+  Converted_SDF_folder_path: "Converted_SDF"
+  Trained_SDF_folder_path: "Trained"
+  #Pred_SDF_folder_path: "Pred"
+
+# ===== Extracting =====
+Extract:
+  mode: train
+  data_expand: False
+  copies: 1
+  rotation:
+    min: 0      
+    max: 360    
+  translation:
+    x_range: [0, 5]  
+    y_range: [0, 5]  
+  axis: "z"     
+  ifc_classes:  
+    - IfcWindow
+    - IfcDoor
+    - IfcSlab
+    - IfcWall
+  # Defines the number of points to sample from each object.
+  minimal_per_surface: 100
+  dense_of_samples_on_surface: 1000   # per m2
+  dense_of_samples_in_space: 800    # per m3
+  far_field_coefficient: 1       # of dense_of_samples_in_space
+  surface_offset_1: 0.01              # distance on normal direction, both direction.
+  surface_offset_2: 0.2              # second layer, outside.
+
+# ===== Training =====
+Train:
+  seed: 12   # Seed for reproducibility
+  # training
+  epochs: 3000
+  lr_model: 0.0001   # Initial learning rate (model)
+  lr_latent: 0.0001  # Initial learning rate (latent vector)
+  batch_size: 20480
+  sigma_regulariser: 0.001  # Sigma value as regulariser in the loss function
+  loss_multiplier: 1   # Loss multiplier
+  clamp: False # Clip the network prediction
+  clamp_value: 0.5 # Value for clipping
+  # architecture
+  num_layers: 8   # Num network layers
+  inner_dim: 4096 # Inner dimensions of the network
+  latent_size: 512  # Size of the latent vector
+  skip_connections: True
+  # lr_scheduling
+  lr_scheduler: True   # Learning rate scheduling
+  lr_multiplier: 0.9   # Multiplier for the learning rate scheduling
+  patience: 20   # Patience inthe learning rate scheduling
+  # pretrained
+  pretrained: False   # Use pretrain weights
+  pretrain_weights: ''   # Path to pretrain weights
+  pretrain_optim_model: ''   # Path to pretrain weights (model)
+  pretrain_optim_latent: ''   # Path to pretrain weights (latent codes)
+
+# ==== Reconstructing ====
+Reconstruct:
+  folder_sdf: '08_07_183836'   # Path containing training results, stored in results/runs_sdf, example: '14_05_2023'
+  obj_ids: ['1_39QyGr6gr2eetTc3lsS1kB']   # List of object IDs to reconstruct from ShapeNetCore as category/instance, example: ['02942699/6d036fd1c70e5a5849493d905c02fa86'].
+  resolution: 300
+  octree_max_depth: 9        # 最细 512³
+  octree_band_width: 0.4     # 越小越贴面，但推断次数增加

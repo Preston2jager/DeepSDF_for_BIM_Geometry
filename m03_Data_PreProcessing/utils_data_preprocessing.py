@@ -6,7 +6,6 @@ import shutil
 import math
 import tempfile
 import random
-import yaml
 
 import numpy as np
 from collections import deque, defaultdict

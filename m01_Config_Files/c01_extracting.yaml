@@ -1,6 +1,5 @@
-# Configs for IFC extraction
+mode: train
 
-# Copying and rotating the model to augment the dataset and enhance SDF weight expressiveness
 data_expand: False
 copies: 1
 rotation:
@@ -11,10 +10,18 @@ translation:
   y_range: [0, 5]  
 axis: "z"     
 
-# Defines the number of points to sample from each object.
-dense_of_samples_on_surface: 2000   # per m2
-dense_of_samples_in_space: 1600    # per m3
-far_field_coefficient: 0.5         # of dense_of_samples_in_space
+ifc_classes:  
+  - IfcWindow
+  - IfcDoor
+  - IfcSlab
+  - IfcWall
 
-surface_offset_1: 0.02              # distance on normal direction, both direction.
-surface_offset_2: 0.5              # second layer, outside.
+# Defines the number of points to sample from each object.
+minimal_per_surface: 100
+dense_of_samples_on_surface: 1000   # per m2
+dense_of_samples_in_space: 800    # per m3
+far_field_coefficient: 1       # of dense_of_samples_in_space
+
+surface_offset_1: 0.01              # distance on normal direction, both direction.
+surface_offset_2: 0.2              # second layer, outside.
+
